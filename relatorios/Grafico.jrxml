@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Grafico" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT LPAD(animal.cod_animal, 7, '0') as CODIGO, (animal.preco_venda -
+(animal.preco_compra + (SELECT IFNULL(SUM(gasto.valor_gasto),0) FROM gasto
+WHERE animal.cod_animal = gasto.cod_animal)) ) AS LUCRO
+FROM animal GROUP BY CODIGO ORDER BY animal.cod_animal ASC]]>
+	</queryString>
+	<field name="CODIGO" class="java.lang.String"/>
+	<field name="LUCRO" class="java.lang.Double"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="17" y="23" width="528" height="40" forecolor="#6699FF"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRÁFICO DE LUCRO POR ANIMAL]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="417">
+			<printWhenExpression><![CDATA[$F{CODIGO}]]></printWhenExpression>
+			<pieChart>
+				<chart>
+					<reportElement x="17" y="16" width="528" height="388"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{CODIGO}]]></keyExpression>
+					<valueExpression><![CDATA[$F{LUCRO}]]></valueExpression>
+					<labelExpression><![CDATA[$F{CODIGO}]]></labelExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>
